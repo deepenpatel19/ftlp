@@ -1,0 +1,78 @@
+from __future__ import unicode_literals
+import json
+from django.db import IntegrityError
+from django.utils.decorators import method_decorator
+from django.views import View
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from .models import User
+
+
+class Signup(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(Signup, self).dispatch(request, *args, **kwargs)
+
+    def post(self, request):
+        try:
+            data = json.loads(request.body.decode("UTF-8"))
+            user = User.objects.create(**data)
+
+            response = {
+                'status': 200,
+                'type': '+OK',
+                'message': 'Successfully Signed Up',
+            }
+        except IntegrityError as e:
+            print(e)
+            response = {
+                'status': 501,
+                'type': '-ERR',
+                'message': 'Same Username or Email',
+            }
+        except Exception as e:
+            print(e)
+            response = {
+                'status': 500,
+                'type': '-ERR',
+                'message': 'Internal Server Error',
+            }
+        return JsonResponse(response)
+
+
+class Login(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(Login, self).dispatch(request, *args, **kwargs)
+
+    def post(self, request):
+        try:
+            data = json.loads(request.body.decode("UTF-8"))
+            email = data.get('email', None)
+            password = data.get('password', None)
+
+            user = User.objects.filter(email=email, password=password)
+            if user:
+                response = {
+                    'status': 200,
+                    'type': '+OK',
+                    'message': 'Successfully Login',
+                }
+            else:
+                response = {
+                    'status': 501,
+                    'type': '+OK',
+                    'message': 'Login Failed',
+                }
+
+        except Exception as e:
+            print(e)
+            response = {
+                'status': 500,
+                'type': '-ERR',
+                'message': 'Internal Server Error',
+            }
+        return JsonResponse(response)
+
