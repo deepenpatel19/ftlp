@@ -17,6 +17,7 @@ class Signup(View):
     def post(self, request):
         try:
             data = json.loads(request.body.decode("UTF-8"))
+            print(data)
             user = User.objects.create(**data)
 
             response = {
