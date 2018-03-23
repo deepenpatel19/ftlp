@@ -6,7 +6,7 @@ from .models import User
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('player_id', 'name', 'email')
+    list_display = ('name', 'email')
 
 
 admin.site.register(User, UserAdmin)

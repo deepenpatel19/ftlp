@@ -3,7 +3,6 @@ from django.db import models
 
 
 class User(models.Model):
-    player_id = models.CharField(max_length=250, null=True)
     name = models.CharField(max_length=250, null=True)
     email = models.CharField(max_length=250, null=True)
     password = models.CharField(max_length=250, null=True)

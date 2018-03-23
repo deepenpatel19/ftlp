@@ -53,11 +53,25 @@ class Login(View):
             email = data.get('email', None)
             password = data.get('password', None)
 
-            user = User.objects.filter(email=email, password=password)
+            user = User.objects.filter(email=email, password=password).values('name',
+                                                                              'email',
+                                                                              'password',
+                                                                              'phone_no',
+                                                                              'dob',
+                                                                              'address',
+                                                                              'special_skill',
+                                                                              'fav_game',
+                                                                              'profile',
+                                                                              )
+            user_data = None
+            for u in user:
+                user_data = u
+
             if user:
                 response = {
                     'status': 200,
                     'type': '+OK',
+                    'user_data': user_data,
                     'message': 'Successfully Login',
                 }
             else:
