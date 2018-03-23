@@ -6,3 +6,4 @@ gunicorn
 pipenv
 whitenoise
 requests
+pillow

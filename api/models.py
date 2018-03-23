@@ -12,6 +12,7 @@ class User(models.Model):
     address = models.CharField(max_length=250, null=True)
     special_skill = models.CharField(max_length=250, null=True)
     fav_game = models.CharField(max_length=250, null=True)
+    profile = models.ImageField(max_length=250, null=True)
 
     def __str__(self):
         return str(self.id)
