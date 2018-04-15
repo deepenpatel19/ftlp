@@ -5,7 +5,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import User
+from .models import User, HostTournament, Ground
 
 
 class Signup(View):
@@ -91,3 +91,76 @@ class Login(View):
             }
         return JsonResponse(response)
 
+
+class TournamentView(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(TournamentView, self).dispatch(request, *args, **kwargs)
+
+    # Fetch tournament details
+    # def get(self, request):
+
+    def post(self, request):
+        try:
+            data = json.loads(request.body.decode("UTF-8"))
+            print(data)
+            tournament = HostTournament.objects.create(**data)
+
+            response = {
+                'status': 200,
+                'type': '+OK',
+                'message': 'Successfully Signed Up',
+            }
+        except IntegrityError as e:
+            print(e)
+            response = {
+                'status': 501,
+                'type': '-ERR',
+                'message': 'Same Username or Email',
+            }
+        except Exception as e:
+            print(e)
+            response = {
+                'status': 500,
+                'type': '-ERR',
+                'message': 'Internal Server Error',
+            }
+        return JsonResponse(response)
+
+
+class GroundView(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(Ground, self).dispatch(request, *args, **kwargs)
+
+    # Fetch Ground details
+    # def get(self, request):
+
+    def post(self, request):
+        try:
+            data = json.loads(request.body.decode("UTF-8"))
+            print(data)
+            ground = Ground.objects.create(**data)
+
+            response = {
+                'status': 200,
+                'type': '+OK',
+                'message': 'Successfully Signed Up',
+            }
+        except IntegrityError as e:
+            print(e)
+            response = {
+                'status': 501,
+                'type': '-ERR',
+                'message': 'Same Username or Email',
+            }
+        except Exception as e:
+            print(e)
+            response = {
+                'status': 500,
+                'type': '-ERR',
+                'message': 'Internal Server Error',
+            }
+        return JsonResponse(response)
