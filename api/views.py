@@ -6,6 +6,7 @@ from django.views import View
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import User, HostTournament, Ground
+from django.forms.models import model_to_dict
 
 
 class Signup(View):
@@ -99,7 +100,14 @@ class TournamentView(View):
         return super(TournamentView, self).dispatch(request, *args, **kwargs)
 
     # Fetch tournament details
-    # def get(self, request):
+    def get(self, request):
+        quaryset = HostTournament.objects.all()
+        tournament = list()
+        for i in quaryset:
+            tournament.append(model_to_dict(i))
+
+        print(tournament)
+        return JsonResponse(tournament, safe=False)
 
     def post(self, request):
         try:
