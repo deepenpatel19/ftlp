@@ -11,7 +11,7 @@ class User(models.Model):
     address = models.CharField(max_length=250, null=True)
     special_skill = models.CharField(max_length=250, null=True)
     fav_game = models.CharField(max_length=50, null=True)
-    profile = models.ImageField(max_length=250, null=True)
+    # profile = models.ImageField(max_length=250, null=True)
     score_or_prev_game = models.IntegerField(null=True)
     # tournament_rsvp = models.
 
@@ -28,7 +28,8 @@ class Location(models.Model):
 
 class Ground(models.Model):
     name = models.CharField(max_length=50, null=True)
-    location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    # location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    location = models.CharField(max_length=50, null=True)
     available_status = models.BooleanField(default=False)
 
     def __str__(self):
