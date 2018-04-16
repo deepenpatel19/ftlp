@@ -93,6 +93,23 @@ class Login(View):
         return JsonResponse(response)
 
 
+class UserView(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(UserView, self).dispatch(request, *args, **kwargs)
+
+    # Fetch tournament details
+    def get(self, request):
+        quaryset = User.objects.all()
+        user_list = list()
+        for i in quaryset:
+            user_list.append(model_to_dict(i))
+
+        print(user_list)
+        return JsonResponse(user_list, safe=False)
+
+
 class TournamentView(View):
 
     @method_decorator(csrf_exempt)
@@ -141,10 +158,17 @@ class GroundView(View):
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
-        return super(Ground, self).dispatch(request, *args, **kwargs)
+        return super(GroundView, self).dispatch(request, *args, **kwargs)
 
     # Fetch Ground details
-    # def get(self, request):
+    def get(self, request):
+        quaryset = Ground.objects.all()
+        ground_list = list()
+        for i in quaryset:
+            ground_list.append(model_to_dict(i))
+
+        print(ground_list)
+        return JsonResponse(ground_list, safe=False)
 
     def post(self, request):
         try:
