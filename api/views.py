@@ -63,7 +63,7 @@ class Login(View):
                                                                               'address',
                                                                               'special_skill',
                                                                               'fav_game',
-                                                                              'profile',
+                                                                              # 'profile',
                                                                               )
             user_data = None
             for u in user:
