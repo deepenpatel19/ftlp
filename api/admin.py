@@ -3,10 +3,11 @@ from __future__ import unicode_literals
 
 from django.contrib import admin
 from .models import User, HostTournament, Location, Ground
+from django.utils.translation import ugettext_lazy
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email')
+    list_display = ('name', 'email', 'phone_no', 'dob', 'address', 'fav_game')
 
 
 class TeamAdmin(admin.ModelAdmin):
@@ -25,3 +26,5 @@ admin.site.register(User, UserAdmin)
 admin.site.register(HostTournament, TeamAdmin)
 admin.site.register(Location, LocationAdmin)
 admin.site.register(Ground, GroundAdmin)
+admin.site.site_header = ("FTLP")
+admin.site.site_title = ("Site Administration")
