@@ -68,52 +68,7 @@ class UserView(mixins.ListModelMixin,
     serializer_class = UserSerializers
 
     def get(self, request, *args, **kwargs):
-        # new_query = User.objects.filter(email=request.query_params.get('email'),
-        #                                 password=request.query_params.get('password')).values('name',
-        #                                                                                       'email',
-        #                                                                                       'password',
-        #                                                                                       'phone_no',
-        #                                                                                       'dob',
-        #                                                                                       'address',
-        #                                                                                       'special_skill',
-        #                                                                                       'fav_game',
-        #                                                                                       'profile',
-        #                                                                                       )
-        # # print(new_query)
-        # user_data = None
-        # for u in new_query:
-        #     user_data = u
-        # print(user_data)
-        # if user_data.get('profile'):
-        #     user_data['profile'] = "https://ftlp-api.herokuapp.com/media/" + user_data['profile']
-        # response = {
-        #                     'status': 200,
-        #                     'type': '+OK',
-        #                     'user_data': user_data,
-        #                     'message': 'Successfully Login',
-        #                 }
-        # return JsonResponse(response)
-
-        quaryset = User.objects.all().values('name',
-                                              'email',
-                                              'password',
-                                              'phone_no',
-                                              'dob',
-                                              'address',
-                                              'special_skill',
-                                              'fav_game',
-                                              'profile',
-                                              )
-        print(quaryset)
-        # user_list = list()
-        # for i in quaryset:
-        #     user_list.append(model_to_dict(i))
-        #
-        # print(user_list)
-        return JsonResponse(quaryset, safe=False)
-
-    # def post(self, request, *args, **kwargs):
-    #     return self.create(request, *args, **kwargs)
+        return self.list(request, *args, **kwargs)
 
 
 class Login(View):
