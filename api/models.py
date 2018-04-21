@@ -11,7 +11,7 @@ class User(models.Model):
     address = models.CharField(max_length=250, null=True)
     special_skill = models.CharField(max_length=250, null=True)
     fav_game = models.CharField(max_length=50, null=True)
-    # profile = models.ImageField(max_length=250, null=True)
+    profile = models.ImageField(null=True, upload_to="Images/")
     score_or_prev_game = models.IntegerField(null=True)
     # tournament_rsvp = models.
 
