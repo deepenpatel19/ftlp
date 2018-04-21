@@ -59,54 +59,97 @@ class Signup(mixins.ListModelMixin,
 #         return JsonResponse(response)
 
 
-class Login(View):
+class Login(mixins.ListModelMixin,
+            mixins.RetrieveModelMixin,
+            mixins.UpdateModelMixin,
+            generics.GenericAPIView):
+    parser_classes = (JSONParser, MultiPartParser, FormParser, )
+    queryset = User.objects.all()
+    serializer_class = UserSerializers
 
-    @method_decorator(csrf_exempt)
-    def dispatch(self, request, *args, **kwargs):
-        return super(Login, self).dispatch(request, *args, **kwargs)
-
-    def post(self, request):
-        try:
-            data = json.loads(request.body.decode("UTF-8"))
-            email = data.get('email', None)
-            password = data.get('password', None)
-
-            user = User.objects.filter(email=email, password=password).values('name',
-                                                                              'email',
-                                                                              'password',
-                                                                              'phone_no',
-                                                                              'dob',
-                                                                              'address',
-                                                                              'special_skill',
-                                                                              'fav_game',
-                                                                              # 'profile',
-                                                                              )
-            user_data = None
-            for u in user:
-                user_data = u
-
-            if user:
-                response = {
-                    'status': 200,
-                    'type': '+OK',
-                    'user_data': user_data,
-                    'message': 'Successfully Login',
-                }
-            else:
-                response = {
-                    'status': 501,
-                    'type': '+OK',
-                    'message': 'Login Failed',
-                }
-
-        except Exception as e:
-            print(e)
-            response = {
-                'status': 500,
-                'type': '-ERR',
-                'message': 'Internal Server Error',
-            }
+    def get(self, request, *args, **kwargs):
+        # print(dir(request))
+        # print(request.query_params)
+        # receive_email = request.query_params.get('email')
+        # print(receive_email)
+        new_query = User.objects.filter(email=request.query_params.get('email'),
+                                        password=request.query_params.get('password')).values('name',
+                                                                                              'email',
+                                                                                              'password',
+                                                                                              'phone_no',
+                                                                                              'dob',
+                                                                                              'address',
+                                                                                              'special_skill',
+                                                                                              'fav_game',
+                                                                                              'profile',
+                                                                                              )
+        # print(new_query)
+        user_data = None
+        for u in new_query:
+            user_data = u
+        # print(user_data)
+        if user_data.get('profile'):
+            user_data['profile'] = "https://ftlp-api.herokuapp.com/media/" + user_data['profile']
+        response = {
+                            'status': 200,
+                            'type': '+OK',
+                            'user_data': user_data,
+                            'message': 'Successfully Login',
+                        }
         return JsonResponse(response)
+
+    # def post(self, request, *args, **kwargs):
+    #     return self.create(request, *args, **kwargs)
+
+
+# class Login(View):
+#
+#     @method_decorator(csrf_exempt)
+#     def dispatch(self, request, *args, **kwargs):
+#         return super(Login, self).dispatch(request, *args, **kwargs)
+#
+#     def post(self, request):
+#         try:
+#             data = json.loads(request.body.decode("UTF-8"))
+#             email = data.get('email', None)
+#             password = data.get('password', None)
+#
+#             user = User.objects.filter(email=email, password=password).values('name',
+#                                                                               'email',
+#                                                                               'password',
+#                                                                               'phone_no',
+#                                                                               'dob',
+#                                                                               'address',
+#                                                                               'special_skill',
+#                                                                               'fav_game',
+#                                                                               # 'profile',
+#                                                                               )
+#             user_data = None
+#             for u in user:
+#                 user_data = u
+#
+#             if user:
+#                 response = {
+#                     'status': 200,
+#                     'type': '+OK',
+#                     'user_data': user_data,
+#                     'message': 'Successfully Login',
+#                 }
+#             else:
+#                 response = {
+#                     'status': 501,
+#                     'type': '+OK',
+#                     'message': 'Login Failed',
+#                 }
+#
+#         except Exception as e:
+#             print(e)
+#             response = {
+#                 'status': 500,
+#                 'type': '-ERR',
+#                 'message': 'Internal Server Error',
+#             }
+#         return JsonResponse(response)
 
 
 class UserView(View):
