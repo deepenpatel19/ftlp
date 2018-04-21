@@ -59,43 +59,61 @@ class Signup(mixins.ListModelMixin,
 #         return JsonResponse(response)
 
 
-# class Login(mixins.ListModelMixin,
-#             mixins.RetrieveModelMixin,
-#             mixins.UpdateModelMixin,
-#             generics.GenericAPIView):
-#     parser_classes = (JSONParser, MultiPartParser, FormParser, )
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializers
-#
-#     def get(self, request, *args, **kwargs):
-#         new_query = User.objects.filter(email=request.query_params.get('email'),
-#                                         password=request.query_params.get('password')).values('name',
-#                                                                                               'email',
-#                                                                                               'password',
-#                                                                                               'phone_no',
-#                                                                                               'dob',
-#                                                                                               'address',
-#                                                                                               'special_skill',
-#                                                                                               'fav_game',
-#                                                                                               'profile',
-#                                                                                               )
-#         # print(new_query)
-#         user_data = None
-#         for u in new_query:
-#             user_data = u
-#         print(user_data)
-#         if user_data.get('profile'):
-#             user_data['profile'] = "https://ftlp-api.herokuapp.com/media/" + user_data['profile']
-#         response = {
-#                             'status': 200,
-#                             'type': '+OK',
-#                             'user_data': user_data,
-#                             'message': 'Successfully Login',
-#                         }
-#         return JsonResponse(response)
-#
-#     # def post(self, request, *args, **kwargs):
-#     #     return self.create(request, *args, **kwargs)
+class UserView(mixins.ListModelMixin,
+            mixins.RetrieveModelMixin,
+            mixins.UpdateModelMixin,
+            generics.GenericAPIView):
+    parser_classes = (JSONParser, MultiPartParser, FormParser, )
+    queryset = User.objects.all()
+    serializer_class = UserSerializers
+
+    def get(self, request, *args, **kwargs):
+        # new_query = User.objects.filter(email=request.query_params.get('email'),
+        #                                 password=request.query_params.get('password')).values('name',
+        #                                                                                       'email',
+        #                                                                                       'password',
+        #                                                                                       'phone_no',
+        #                                                                                       'dob',
+        #                                                                                       'address',
+        #                                                                                       'special_skill',
+        #                                                                                       'fav_game',
+        #                                                                                       'profile',
+        #                                                                                       )
+        # # print(new_query)
+        # user_data = None
+        # for u in new_query:
+        #     user_data = u
+        # print(user_data)
+        # if user_data.get('profile'):
+        #     user_data['profile'] = "https://ftlp-api.herokuapp.com/media/" + user_data['profile']
+        # response = {
+        #                     'status': 200,
+        #                     'type': '+OK',
+        #                     'user_data': user_data,
+        #                     'message': 'Successfully Login',
+        #                 }
+        # return JsonResponse(response)
+
+        quaryset = User.objects.all().values('name',
+                                              'email',
+                                              'password',
+                                              'phone_no',
+                                              'dob',
+                                              'address',
+                                              'special_skill',
+                                              'fav_game',
+                                              'profile',
+                                              )
+        print(quaryset)
+        # user_list = list()
+        # for i in quaryset:
+        #     user_list.append(model_to_dict(i))
+        #
+        # print(user_list)
+        return JsonResponse(quaryset, safe=False)
+
+    # def post(self, request, *args, **kwargs):
+    #     return self.create(request, *args, **kwargs)
 
 
 class Login(View):
@@ -148,21 +166,21 @@ class Login(View):
         return JsonResponse(response)
 
 
-class UserView(View):
-
-    @method_decorator(csrf_exempt)
-    def dispatch(self, request, *args, **kwargs):
-        return super(UserView, self).dispatch(request, *args, **kwargs)
-
-    # Fetch tournament details
-    def get(self, request):
-        quaryset = User.objects.all()
-        user_list = list()
-        for i in quaryset:
-            user_list.append(model_to_dict(i))
-
-        print(user_list)
-        return JsonResponse(user_list, safe=False)
+# class UserView(View):
+#
+#     @method_decorator(csrf_exempt)
+#     def dispatch(self, request, *args, **kwargs):
+#         return super(UserView, self).dispatch(request, *args, **kwargs)
+#
+#     # Fetch tournament details
+#     def get(self, request):
+#         quaryset = User.objects.all()
+#         user_list = list()
+#         for i in quaryset:
+#             user_list.append(model_to_dict(i))
+#
+#         print(user_list)
+#         return JsonResponse(user_list, safe=False)
 
 
 class TournamentView(View):
@@ -190,14 +208,14 @@ class TournamentView(View):
             response = {
                 'status': 200,
                 'type': '+OK',
-                'message': 'Successfully Signed Up',
+                'message': 'Successfully Tournament added',
             }
         except IntegrityError as e:
             print(e)
             response = {
                 'status': 501,
                 'type': '-ERR',
-                'message': 'Same Username or Email',
+                'message': 'Conflict with other data',
             }
         except Exception as e:
             print(e)
@@ -234,14 +252,14 @@ class GroundView(View):
             response = {
                 'status': 200,
                 'type': '+OK',
-                'message': 'Successfully Signed Up',
+                'message': 'Successfully Ground added.',
             }
         except IntegrityError as e:
             print(e)
             response = {
                 'status': 501,
                 'type': '-ERR',
-                'message': 'Same Username or Email',
+                'message': 'Conflict error.',
             }
         except Exception as e:
             print(e)
