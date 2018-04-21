@@ -68,10 +68,6 @@ class Login(mixins.ListModelMixin,
     serializer_class = UserSerializers
 
     def get(self, request, *args, **kwargs):
-        # print(dir(request))
-        # print(request.query_params)
-        # receive_email = request.query_params.get('email')
-        # print(receive_email)
         new_query = User.objects.filter(email=request.query_params.get('email'),
                                         password=request.query_params.get('password')).values('name',
                                                                                               'email',
@@ -87,7 +83,7 @@ class Login(mixins.ListModelMixin,
         user_data = None
         for u in new_query:
             user_data = u
-        # print(user_data)
+        print(user_data)
         if user_data.get('profile'):
             user_data['profile'] = "https://ftlp-api.herokuapp.com/media/" + user_data['profile']
         response = {
