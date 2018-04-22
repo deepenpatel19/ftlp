@@ -113,11 +113,11 @@ class LoginView(mixins.ListModelMixin,
             print(queryset)
             if not queryset:
                 response = {
-                    'status': 401,
+                    'status': 206,
                     'type': '+OK',
                     'message': 'Credential does not match',
                 }
-                return Response(response, status=401)
+                return Response(response, status=206)
             user_data = None
             for u in queryset:
                 user_data = u
@@ -158,11 +158,11 @@ class FPView(mixins.ListModelMixin,
                 return Response(response, status=200)
             else:
                 response = {
-                    'status': 401,
+                    'status': 206,
                     'type': '+OK',
                     'message': 'Email does not exist.',
                 }
-                return Response(response, status=401)
+                return Response(response, status=206)
         except Exception as e:
             response = {
                 'status': 500,
