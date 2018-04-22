@@ -113,11 +113,11 @@ class LoginView(mixins.ListModelMixin,
             print(queryset)
             if not queryset:
                 response = {
-                    'status': 200,
+                    'status': 401,
                     'type': '+OK',
                     'message': 'Credential does not match',
                 }
-                return Response(response, status=200)
+                return Response(response, status=401)
             user_data = None
             for u in queryset:
                 user_data = u
@@ -155,13 +155,14 @@ class FPView(mixins.ListModelMixin,
                     'type': '+OK',
                     'message': 'Email Exist.',
                 }
+                return Response(response, status=200)
             else:
                 response = {
-                    'status': 200,
+                    'status': 401,
                     'type': '+OK',
                     'message': 'Email does not exist.',
                 }
-            return Response(response, status=200)
+                return Response(response, status=401)
         except Exception as e:
             response = {
                 'status': 500,
@@ -175,7 +176,7 @@ class FPView(mixins.ListModelMixin,
             body = request.body.decode('utf-8')
             body_data = json.loads(body)
             queryset = User.objects.get(email=body_data.get('email'))
-            print(queryset)
+            # print(queryset)
             if queryset:
                 queryset.password = body_data.get('password')
                 queryset.save()
