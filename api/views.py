@@ -111,6 +111,13 @@ class LoginView(mixins.ListModelMixin,
                                                                                  'profile',
                                                                                  )
             print(queryset)
+            if not queryset:
+                response = {
+                    'status': 200,
+                    'type': '+OK',
+                    'message': 'Credential does not match',
+                }
+                return Response(response, status=200)
             user_data = None
             for u in queryset:
                 user_data = u
