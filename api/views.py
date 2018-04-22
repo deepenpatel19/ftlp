@@ -139,6 +139,30 @@ class FPView(mixins.ListModelMixin,
     # queryset = User.objects.all()
     # serializer_class = UserSerializers
 
+    def get(self, request, *args, **kwargs):
+        try:
+            queryset = User.objects.filter(email=request.query_params.get('email'))
+            if queryset:
+                response = {
+                    'status': 200,
+                    'type': '+OK',
+                    'message': 'Email Exist.',
+                }
+            else:
+                response = {
+                    'status': 200,
+                    'type': '+OK',
+                    'message': 'Email does not exist.',
+                }
+            return Response(response, status=200)
+        except Exception as e:
+            response = {
+                'status': 500,
+                'type': '+OK',
+                'message': 'Internal server error',
+            }
+            return Response(response, status=500)
+
     def post(self, request, *args, **kwargs):
         try:
             body = request.body.decode('utf-8')
