@@ -37,6 +37,7 @@ class Ground(models.Model):
     date = models.CharField(max_length=50, null=True)
     start_time = models.CharField(max_length=50, null=True)
     end_time = models.CharField(max_length=50, null=True)
+    sport_type_for_rent = models.CharField(max_length=50, null=True)
 
     def __str__(self):
         return str(self.name)
