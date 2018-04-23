@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from django.db import models
+from django.utils import timezone
 
 
 class User(models.Model):
@@ -32,6 +33,10 @@ class Ground(models.Model):
     location = models.CharField(max_length=50, null=True)
     available_status = models.BooleanField(default=False)
     price = models.FloatField()
+    rent_by = models.CharField(max_length=50, null=True)
+    date = models.CharField(max_length=50, null=True)
+    start_time = models.CharField(max_length=50, null=True)
+    end_time = models.CharField(max_length=50, null=True)
 
     def __str__(self):
         return str(self.name)

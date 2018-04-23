@@ -19,7 +19,7 @@ class LocationAdmin(admin.ModelAdmin):
 
 
 class GroundAdmin(admin.ModelAdmin):
-    list_display = ('name', 'location', 'available_status', 'price', )
+    list_display = ('name', 'location', 'available_status', 'price', 'rent_by', 'date', 'start_time', 'end_time', )
 
 
 admin.site.register(User, UserAdmin)
