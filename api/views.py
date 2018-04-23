@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from .models import User, HostTournament, Ground
 from django.forms.models import model_to_dict
 from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
-from .serializers import UserSerializers
+from .serializers import UserSerializers, GroundSerializers
 from rest_framework import mixins, generics
 
 
@@ -309,48 +309,81 @@ class TournamentView(View):
         return JsonResponse(response)
 
 
-class GroundView(View):
+# class GroundView(View):
+#
+#     @method_decorator(csrf_exempt)
+#     def dispatch(self, request, *args, **kwargs):
+#         return super(GroundView, self).dispatch(request, *args, **kwargs)
+#
+#     # Fetch Ground details
+#     def get(self, request):
+#         quaryset = Ground.objects.all()
+#         ground_list = list()
+#         for i in quaryset:
+#             ground_list.append(model_to_dict(i))
+#
+#         print(ground_list)
+#         return JsonResponse(ground_list, safe=False)
+#
+#     def post(self, request):
+#         try:
+#             data = json.loads(request.body.decode("UTF-8"))
+#             print(data)
+#             ground = Ground.objects.create(**data)
+#
+#             response = {
+#                 'status': 200,
+#                 'type': '+OK',
+#                 'message': 'Successfully Ground added.',
+#             }
+#         except IntegrityError as e:
+#             print(e)
+#             response = {
+#                 'status': 501,
+#                 'type': '-ERR',
+#                 'message': 'Conflict error.',
+#             }
+#         except Exception as e:
+#             print(e)
+#             response = {
+#                 'status': 500,
+#                 'type': '-ERR',
+#                 'message': 'Internal Server Error',
+#             }
+#         return JsonResponse(response)
 
-    @method_decorator(csrf_exempt)
-    def dispatch(self, request, *args, **kwargs):
-        return super(GroundView, self).dispatch(request, *args, **kwargs)
 
-    # Fetch Ground details
-    def get(self, request):
-        quaryset = Ground.objects.all()
-        ground_list = list()
-        for i in quaryset:
-            ground_list.append(model_to_dict(i))
+class GroundView(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+                 mixins.CreateModelMixin, generics.GenericAPIView):
+    parser_classes = (JSONParser, MultiPartParser, FormParser,)
+    queryset = Ground.objects.all()
+    serializer_class = GroundSerializers
 
-        print(ground_list)
-        return JsonResponse(ground_list, safe=False)
-
-    def post(self, request):
+    def get_object(self, name):
         try:
-            data = json.loads(request.body.decode("UTF-8"))
-            print(data)
-            ground = Ground.objects.create(**data)
-
-            response = {
-                'status': 200,
-                'type': '+OK',
-                'message': 'Successfully Ground added.',
-            }
-        except IntegrityError as e:
-            print(e)
-            response = {
-                'status': 501,
-                'type': '-ERR',
-                'message': 'Conflict error.',
-            }
+            queryset = Ground.objects.get(name=name)
+            print(queryset)
+            return queryset
+            # return User.objects.get(email=email)
         except Exception as e:
             print(e)
-            response = {
-                'status': 500,
-                'type': '-ERR',
-                'message': 'Internal Server Error',
-            }
-        return JsonResponse(response)
+            raise Http404
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        body_data = request.data
+        print(body_data)
+        user = self.get_object(body_data.get('name'))
+        serializer = GroundSerializers(user, data=body_data)
+        if serializer.is_valid():
+            self.perform_update(serializer)
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, status=203)
 
 
 class UserUpdateView(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,

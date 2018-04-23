@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User, Ground
 
 
 class UserSerializers(serializers.ModelSerializer):
@@ -10,3 +10,10 @@ class UserSerializers(serializers.ModelSerializer):
         model = User
         fields = ('name', 'email', 'password', 'phone_no', 'dob', 'address', 'special_skill',
                   'fav_game', 'profile', 'score_or_prev_game')
+
+
+class GroundSerializers(serializers.ModelSerializer):
+
+    class Meta:
+        model = Ground
+        fields = ('name', 'location', 'available_status', 'price', 'rent_by', 'date', 'start_time', 'end_time', )
