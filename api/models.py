@@ -31,7 +31,7 @@ class Ground(models.Model):
     name = models.CharField(max_length=50, null=True)
     # location = models.ForeignKey(Location, on_delete=models.CASCADE)
     location = models.CharField(max_length=50, null=True)
-    available_status = models.BooleanField(default=False)
+    available_status = models.IntegerField()
     price = models.FloatField()
     rent_by = models.CharField(max_length=50, null=True)
     date = models.CharField(max_length=50, null=True)
