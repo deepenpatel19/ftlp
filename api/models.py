@@ -31,6 +31,7 @@ class Ground(models.Model):
     # location = models.ForeignKey(Location, on_delete=models.CASCADE)
     location = models.CharField(max_length=50, null=True)
     available_status = models.BooleanField(default=False)
+    price = models.FloatField()
 
     def __str__(self):
         return str(self.name)

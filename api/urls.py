@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from .views import Signup, Login, TournamentView, GroundView, UserView, LoginView, FPView
+from .views import Signup, Login, TournamentView, GroundView, UserView, LoginView, FPView, UserUpdateView
 
 urlpatterns = [
     url(r'^signup/$', Signup.as_view(), name='signup'),
@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^users/$', UserView.as_view(), name='users'),
     url(r'^login/$', LoginView.as_view(), name='login'),
     url(r'^pwreset/$', FPView.as_view(), name='password reset'),
+    url(r'^userupdate/$', UserUpdateView.as_view(), name='user update'),
 ]

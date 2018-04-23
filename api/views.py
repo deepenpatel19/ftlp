@@ -3,7 +3,7 @@ import json
 from django.db import IntegrityError
 from django.utils.decorators import method_decorator
 from django.views import View
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 
@@ -138,10 +138,7 @@ class LoginView(mixins.ListModelMixin,
             return Response(response, status=500)
 
 
-class FPView(mixins.ListModelMixin,
-            mixins.RetrieveModelMixin,
-            mixins.UpdateModelMixin,
-            generics.GenericAPIView):
+class FPView(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
     # parser_classes = (JSONParser, MultiPartParser, FormParser, )
     # queryset = User.objects.all()
     # serializer_class = UserSerializers
@@ -354,3 +351,30 @@ class GroundView(View):
                 'message': 'Internal Server Error',
             }
         return JsonResponse(response)
+
+
+class UserUpdateView(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+                     generics.GenericAPIView):
+    parser_classes = (JSONParser, MultiPartParser, FormParser, )
+    queryset = User.objects.all()
+    serializer_class = UserSerializers
+
+    def get_object(self, email):
+        try:
+            queryset = User.objects.get(email=email)
+            print(queryset)
+            return queryset
+            # return User.objects.get(email=email)
+        except Exception as e:
+            print(e)
+            raise Http404
+
+    def post(self, request, *args, **kwargs):
+        body_data = request.data
+        print(body_data)
+        user = self.get_object(body_data.get('email'))
+        serializer = UserSerializers(user, data=body_data)
+        if serializer.is_valid():
+            self.perform_update(serializer)
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, status=203)
