@@ -81,7 +81,7 @@ db_from_env = dj_database_url.config()
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': DB_NAME,
         'USER': MYSQL_USER,
         'PASSWORD':MYSQL_PASSWORD,
