@@ -6,5 +6,5 @@ pipenv
 whitenoise
 requests
 pillow
-djangorestframework==3.8.2
+djangorestframework==3.11.2
 psycopg2
